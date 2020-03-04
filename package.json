@@ -1,0 +1,28 @@
+{
+  "name": "text-analysis",
+  "version": "1.2.0",
+  "description": "an ai intelilligent script",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel public/src --watch --presets @babel/preset-env --out-dir build",
+    "start": "babel-watch public/src/main"
+  },
+  "author": "John Bunmat",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "@babel/runtime": "^7.8.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.16.3",
+    "unirest": "^0.6.0",
+    "axios": "^0.17.1",
+    "yarn": "^1.21.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-watch": "^7.0.0"
+  }
+}
