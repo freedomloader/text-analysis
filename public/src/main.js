@@ -7,7 +7,7 @@
  app.use(express.json());
  require('dotenv').config();
 
- const port = 3020;
+ const port = 8080;
  app.get('/', (req, res) => {
     if (!req.query.text) {
         const noresult = {'type':'No Request', 'count':'0'};
