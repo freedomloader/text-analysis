@@ -70,8 +70,8 @@ export default class HunmaAI {
       var result = {"type":"all"};
       this.getWordAISentiment(q, function(response, sentiment) {
         self.getWordAITopic(q, function(response, topic) {
-            
             self.getAIWordAssociations(q, function(response, associations) {
+               //cb(response, topic);
                result["topic"] = topic;
                result["sentiment"] = sentiment;
                result["associations"] = associations;   

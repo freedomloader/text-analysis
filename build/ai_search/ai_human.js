@@ -5,6 +5,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
+var _axios = _interopRequireDefault(require("axios"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -16,6 +22,7 @@ var HunmaAI = /*#__PURE__*/function () {
     _classCallCheck(this, HunmaAI);
 
     this.url = "https://www.twinword.com/api/";
+    this.rest = require("unirest");
   }
 
   _createClass(HunmaAI, [{
@@ -34,29 +41,33 @@ var HunmaAI = /*#__PURE__*/function () {
   }, {
     key: "detectHumanAI",
     value: function detectHumanAI(url, q, cb) {
-      var req = this.db.unirest.post(url);
-      req.headers({
-        "Content-Type": "application/x-www-form-urlencoded"
-      });
-      if (this.db.isStr(q)) req.send(q);
       var self = this;
-      req.maxRedirects(2).followRedirect(true).end(function (response) {
+      (0, _axios["default"])({
+        method: 'post',
+        url: url,
+        data: q,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      }).then(function (response) {
         if (response.error) {
           console.log("ERROR: " + response.error);
           cb(response, null);
         } else {
-          var body = response.body;
+          var body = response.data;
 
-          if (self.db.isStr(body)) {
-            body = self.db.getJSON(body);
+          if (self.isStr(body)) {
+            body = self.getJSON(body);
 
             if (body.result_msg == "Success") {
               return cb(response, body);
             }
           }
 
-          cb(response, null);
+          cb(response, "gg");
         }
+      }, function (error) {
+        cb(response, "failed ");
       });
     } //Return sentiment analysis results with score for the given text.
     //get possibility of a text either positive or negative 
@@ -88,12 +99,46 @@ var HunmaAI = /*#__PURE__*/function () {
       this.getWordAISentiment(q, function (response, sentiment) {
         self.getWordAITopic(q, function (response, topic) {
           self.getAIWordAssociations(q, function (response, associations) {
+            //cb(response, topic);
             result["topic"] = topic;
             result["sentiment"] = sentiment;
             result["associations"] = associations;
             cb(response, result);
           });
         });
+      });
+    }
+  }, {
+    key: "getJSON",
+    value: function getJSON(json) {
+      if (!(json instanceof Object) && json.startsWith("{")) {
+        try {
+          return JSON.parse(json);
+        } catch (e) {
+          return json;
+        }
+      } else {
+        return json;
+      }
+    }
+  }, {
+    key: "customStringify",
+    value: function customStringify(v) {
+      var cache = new Set();
+      return JSON.stringify(v, function (key, value) {
+        if (_typeof(value) === 'object' && value !== null) {
+          if (cache.has(value)) {
+            try {
+              return JSON.parse(JSON.stringify(value));
+            } catch (err) {
+              return;
+            }
+          }
+
+          cache.add(value);
+        }
+
+        return value;
       });
     }
   }]);
