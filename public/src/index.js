@@ -1,4 +1,3 @@
-//import '@babel/polyfill'
 var HunmaAI = require("./ai-server/ai_human");
 var analysis = require("./ai-server/analysis");
 

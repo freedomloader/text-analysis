@@ -5,7 +5,9 @@
   "main": "server.js",
   "homepage": "https://freedomloader.github.io/text-analysis/",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev-start": "babel-watch server",
+    "dev-build": "babel public/src --watch --presets @babel/preset-env --out-dir build"
   },
   "author": "John Bunmat",
   "license": "ISC",
