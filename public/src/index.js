@@ -6,8 +6,10 @@ const loadAnalysis = async (req, res) => {
   const ai = new HunmaAI();
   try {
     if (!req.query.text) {
-      const noresult = { type: "No Request", count: "0" };
-      return res.status(400).send(noresult);
+      // ejs render automatically looks in the views folder
+      res.render("index");
+      //const noresult = { type: "No Request", count: "0" };
+      return;//res.status(400).send(noresult);
     }
 
     const result = await ai.getMain(req.query.text, true);
