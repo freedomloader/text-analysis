@@ -95,16 +95,22 @@ module.exports = class HunmaAI {
     return result;
   }
 
-  async getMain(q, withAddress) {
+  async getMain(q, mWithAddress) {
     var result = { type: "all" };
 
-    const topic = await this.getWordAITopic(q);
-    const lemma = await this.getAIWordLemma(q);
+    try {
+      const topic = await this.getWordAITopic(q);
+      const lemma = await this.getAIWordLemma(q);
 
-    result["topic"] = await topic.result;
-    result["lemma"] = await lemma.result;
+      result["topic"] = await topic.result;
+      result["lemma"] = await lemma.result;
+    } catch (e) {
+      
+      result["topic"] = await q.split(" ");
+      result["lemma"] = await q.split(" ");
+    }
 
-    if (withAddress) {
+    if (mWithAddress) {
       var cities = require("../cities.json");
       const address = await cities;
       //"https://raw.githubusercontent.com/David-Haim/CountriesToCitiesJSON/master/countriesToCities.json"
@@ -125,4 +131,4 @@ module.exports = class HunmaAI {
       return json;
     }
   }
-}
+};

@@ -8,6 +8,9 @@ var data = require("./analysisdata");
  * @return result
  */
 async function getEventOnResult(text, result) {
+  if (!result.topic || !result.topic.response)
+    return "response failed";
+  
   let new_result = [];
   const response = result.topic.response;
   if (isResultEvent(response)) {
