@@ -5,11 +5,11 @@ var express = require("express");
 var loadAnalysis = require("./ai_search/load_analysis");
 const http = require("http");
 
-const app = express();
+var app = express();
 app.use(express.json());
 require("dotenv").config();
 
-const port = 3020;
+var port = process.env.PORT || 8080;
 
 app.get("/", loadAnalysis);
 app.set("port", port);
