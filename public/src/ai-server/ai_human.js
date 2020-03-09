@@ -102,12 +102,11 @@ module.exports = class HunmaAI {
       const topic = await this.getWordAITopic(q);
       const lemma = await this.getAIWordLemma(q);
 
-      result["topic"] = await topic.result.response;
-      result["lemma"] = await lemma.result.lemma;
+      result["topic"] = await topic.result;
+      result["lemma"] = await lemma.result;
     } catch (e) {
-
-      result["topic"] = { response: await q.split(" ") };
-      result["lemma"] = { lemma: await q.split(" ") };
+      result["topic"] = { response: await this.textToSplit(q) };
+      result["lemma"] = { lemma: q.split(" ") };
     }
 
     if (mWithAddress) {
@@ -116,6 +115,17 @@ module.exports = class HunmaAI {
       //"https://raw.githubusercontent.com/David-Haim/CountriesToCitiesJSON/master/countriesToCities.json"
 
       result["addresss"] = address;
+    }
+    return result;
+  }
+
+  async textToSplit(q) {
+    let result = {};
+
+    var arr = await q.split(" ");
+    for (let i = 0; i < arr.length; i++) {
+      let ss = arr[i];
+      result[ss] = 1;
     }
     return result;
   }

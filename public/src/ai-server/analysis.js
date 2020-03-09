@@ -29,7 +29,7 @@ async function getEventOnResult(text, result) {
     new_result.push(parseLemma(result));
     return new_result;
   }
-  return result;
+  return "event not found";
 }
 
 /* Check if string is an event
@@ -39,6 +39,21 @@ async function getEventOnResult(text, result) {
 function isResultEvent(result) {
   try {
     if (
+      result.game ||
+      result.match ||
+      result.boxing ||
+      result.football ||
+      result.betting ||
+      result.party ||
+      result.occasion ||
+      result.travel ||
+      result.wedding ||
+      result.burial ||
+      result.die ||
+      result.dead ||
+      result.birth ||
+      result.sex ||
+      result.kill ||
       result.plans ||
       result.event ||
       result.events ||
