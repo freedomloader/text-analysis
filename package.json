@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel public/src --watch --presets @babel/preset-env --out-dir build",
-    "start": "babel-watch public/src/main",
+    "start": "node public/src/main",
     "deploy" : "gh-pages -d build",
     "predeploy" : "npm run build"
   },

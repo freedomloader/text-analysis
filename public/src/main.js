@@ -1,19 +1,20 @@
-import '@babel/polyfill'
- 
- var express = require("express");
- var loadAnalysis = require("./ai_search/load_analysis");
- const http = require('http');
+//import '@babel/polyfill'
+//"start": "babel-watch public/src/main",
 
- const app = express();
- app.use(express.json());
- require('dotenv').config();
+var express = require("express");
+var loadAnalysis = require("./ai_search/load_analysis");
+const http = require("http");
 
- const port = 3020;
- 
- app.get('/', loadAnalysis);
- app.set('port', port);
+const app = express();
+app.use(express.json());
+require("dotenv").config();
 
- const server = http.createServer(app);
- server.listen(port, () => {
-   console.log(`App listening on PORT ${port}`);
- });
+const port = 3020;
+
+app.get("/", loadAnalysis);
+app.set("port", port);
+
+const server = http.createServer(app);
+server.listen(port, () => {
+  console.log(`App listening on PORT ${port}`);
+});
