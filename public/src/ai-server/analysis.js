@@ -11,7 +11,7 @@ async function getEventOnResult(text, result) {
   let new_result = [];
   const response = result.topic.response;
   if (isResultEvent(response)) {
-    new_result.push("found an event");
+    new_result.push("Event Found");
 
     new_result.push(parseActualDate(text));
     new_result.push(dateFromString(text));
@@ -26,7 +26,7 @@ async function getEventOnResult(text, result) {
     new_result.push(parseLemma(result));
     return new_result;
   }
-  return "errort: ";
+  return "event not found";
 }
 
 /* Check if string is an event
