@@ -5,7 +5,7 @@ const loadAnalysis = async (req, res) => {
   const ai = new HunmaAI();
   try {
     if (!req.query.text) {
-      const noresult = { type: "No Api Request", count: "0" };
+      const noresult = { type: "No Request", count: "0" };
       return res.status(400).send(noresult);
     }
 
