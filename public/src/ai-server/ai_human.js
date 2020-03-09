@@ -102,12 +102,12 @@ module.exports = class HunmaAI {
       const topic = await this.getWordAITopic(q);
       const lemma = await this.getAIWordLemma(q);
 
-      result["topic"] = await topic.result;
-      result["lemma"] = await lemma.result;
+      result["topic"] = await topic.result.response;
+      result["lemma"] = await lemma.result.lemma;
     } catch (e) {
-      
-      result["topic"] = await q.split(" ");
-      result["lemma"] = await q.split(" ");
+
+      result["topic"] = { response: await q.split(" ") };
+      result["lemma"] = { lemma: await q.split(" ") };
     }
 
     if (mWithAddress) {

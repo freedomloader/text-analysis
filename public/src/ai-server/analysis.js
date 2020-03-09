@@ -29,7 +29,7 @@ async function getEventOnResult(text, result) {
     new_result.push(parseLemma(result));
     return new_result;
   }
-  return "event not found";
+  return result;
 }
 
 /* Check if string is an event
