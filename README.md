@@ -1,4 +1,4 @@
-heroku-node
+text-analysis
 ===========
 
-Code for the tutorial by @sevilayha: Deploying Node Apps to Heroku
+Get text analysis extract an event from a text get a topic and a sentiment of a text by @jbbunmat

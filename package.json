@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "description": "an ai intelilligent script",
   "main": "server.js",
+  "homepage": "https://freedomloader.github.io/text-analysis/",
   "scripts": {
     "start": "node server.js"
   },
