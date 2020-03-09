@@ -2,7 +2,7 @@
 //"start": "babel-watch public/src/main",
 
 var express = require("express");
-var loadAnalysis = require("./ai_search/load_analysis");
+var loadAnalysis = require("./public/src/index");
 const http = require("http");
 
 var app = express();

@@ -1,5 +1,6 @@
-var HunmaAI = require("./ai_human");
-var analysis = require("./analysis");
+//import '@babel/polyfill'
+var HunmaAI = require("./ai-server/ai_human");
+var analysis = require("./ai-server/analysis");
 
 const loadAnalysis = async (req, res) => {
   const ai = new HunmaAI();
