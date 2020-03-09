@@ -21,6 +21,7 @@
     "express": "^4.16.3",
     "gh-pages": "^2.2.0",
     "unirest": "^0.6.0",
+    "date-fns": "2.9.0",
     "yarn": "^1.21.1"
   },
   "devDependencies": {
