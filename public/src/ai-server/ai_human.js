@@ -104,6 +104,8 @@ module.exports = class HunmaAI {
 
       result["topic"] = await topic.result;
       result["lemma"] = await lemma.result;
+
+      result.topic.response;
     } catch (e) {
       result["topic"] = { response: await this.textToSplit(q) };
       result["lemma"] = { lemma: q.split(" ") };

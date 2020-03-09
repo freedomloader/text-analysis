@@ -8,9 +8,8 @@ var data = require("./analysisdata");
  * @return result
  */
 async function getEventOnResult(text, result) {
-  if (!result.topic || !result.topic.response)
-    return "response failed";
-  
+  if (!result.topic || !result.topic.response) return "response failed " + JSON.stringify(result);
+
   let new_result = [];
   const response = result.topic.response;
   if (isResultEvent(response)) {
@@ -30,43 +29,6 @@ async function getEventOnResult(text, result) {
     return new_result;
   }
   return "event not found";
-}
-
-/* Check if string is an event
- * @param result a string to check
- * @return true,false
- */
-function isResultEvent(result) {
-  try {
-    if (
-      result.game ||
-      result.match ||
-      result.boxing ||
-      result.football ||
-      result.betting ||
-      result.party ||
-      result.occasion ||
-      result.travel ||
-      result.wedding ||
-      result.burial ||
-      result.die ||
-      result.dead ||
-      result.birth ||
-      result.sex ||
-      result.kill ||
-      result.plans ||
-      result.event ||
-      result.events ||
-      result.metting ||
-      result.mettings ||
-      result.appointment ||
-      result.appointments
-    ) {
-      return true;
-    }
-  } catch (e) {
-    return null;
-  }
 }
 
 /* Extract event info
@@ -212,6 +174,43 @@ function monthNameToNum(monthname) {
     return month === -1 ? 0 : month + 1;
   } else {
     return month + 1;
+  }
+}
+
+/* Check if string is an event
+ * @param result a string to check
+ * @return true,false
+ */
+function isResultEvent(result) {
+  try {
+    if (
+      result.game ||
+      result.match ||
+      result.boxing ||
+      result.football ||
+      result.betting ||
+      result.party ||
+      result.occasion ||
+      result.travel ||
+      result.wedding ||
+      result.burial ||
+      result.die ||
+      result.dead ||
+      result.birth ||
+      result.sex ||
+      result.kill ||
+      result.plans ||
+      result.event ||
+      result.events ||
+      result.metting ||
+      result.mettings ||
+      result.appointment ||
+      result.appointments
+    ) {
+      return true;
+    }
+  } catch (e) {
+    return null;
   }
 }
 
