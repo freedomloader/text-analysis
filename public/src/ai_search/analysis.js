@@ -1,5 +1,5 @@
 //import { format } from "date-fns";
-import data from "./analysisdata";
+var data = require("./analysisdata");
 
 /* Check if text is a event or metting or an appoinment
  *   and return a result base on the request
@@ -197,4 +197,4 @@ function monthNameToNum(monthname) {
   }
 }
 
-export default getEventOnResult;
+module.exports = getEventOnResult;

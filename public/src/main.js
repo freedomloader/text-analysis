@@ -1,6 +1,7 @@
- import '@babel/polyfill'
- import express from 'express'
- import loadAnalysis from './ai_search/load_analysis'
+import '@babel/polyfill'
+ 
+ var express = require("express");
+ var loadAnalysis = require("./ai_search/load_analysis");
  const http = require('http');
 
  const app = express();

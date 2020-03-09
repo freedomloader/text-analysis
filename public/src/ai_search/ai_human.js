@@ -1,5 +1,5 @@
-import axios from "axios";
-export default class HunmaAI {
+var axios = require("axios");
+module.exports = class HunmaAI {
   constructor() {
     this.url = "https://www.twinword.com/api/";
     this.rest = require("unirest");

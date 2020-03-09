@@ -31,4 +31,4 @@ const data = {
   months: months,
   monthsS: monthsS
 };
-export default data;
+module.exports = data;
