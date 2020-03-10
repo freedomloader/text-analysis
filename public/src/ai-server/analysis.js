@@ -226,6 +226,7 @@ function isResultEvent(result) {
       result.sex ||
       result.kill ||
       result.plans ||
+      result.beach ||
       result.school ||
       result.opening ||
       result.hotel ||
