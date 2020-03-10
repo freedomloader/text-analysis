@@ -20,6 +20,8 @@ async function getEventOnResult(text, result) {
 
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
     var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2}))/);
+
+    //var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2})|(?: [0-9]{1,2}))/);
     new_result["Time"] = hour + ": at: " + time;
 
     let addressParser = parseAddress(text, result.addresss);
