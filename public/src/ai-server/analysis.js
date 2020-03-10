@@ -200,6 +200,11 @@ function isResultEvent(result) {
       result.comedy ||
       result.series ||
       result.season ||
+      result.occure ||
+      result.occuring ||
+      result.ending ||
+      result.starting ||
+      result.appearance ||
       result.started ||
       result.working ||
       result.employed ||
