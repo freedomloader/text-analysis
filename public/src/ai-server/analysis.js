@@ -218,6 +218,11 @@ function isResultEvent(result) {
       result.party ||
       result.occasion ||
       result.travel ||
+      result.flight ||
+      result.flights ||
+      result.airline ||
+      result.ticket ||
+      result.tickets ||
       result.wedding ||
       result.burial ||
       result.die ||
