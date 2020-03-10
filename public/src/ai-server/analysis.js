@@ -244,6 +244,10 @@ function isResultEvent(result) {
       result.restaurant ||
       result.restaurants ||
       result.investment ||
+      result.church ||
+      result.vigil ||
+      result.visit ||
+      result.visiting ||
       result.event ||
       result.events ||
       result.session ||
