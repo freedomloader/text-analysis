@@ -226,6 +226,15 @@ function isResultEvent(result) {
       result.sex ||
       result.kill ||
       result.plans ||
+      result.school ||
+      result.opening ||
+      result.hotel ||
+      result.breakfast ||
+      result.lunch ||
+      result.dinner ||
+      result.restaurant ||
+      result.restaurants ||
+      result.investment ||
       result.event ||
       result.events ||
       result.session ||
