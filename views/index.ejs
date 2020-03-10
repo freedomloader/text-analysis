@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Text Analysis Api</title>
 
-<head>
-	<meta charset="UTF-8" />
-	<title>Text Analysis Api</title>
+    <!-- CSS -->
+    <!-- load bootstrap and our own personal stylesheet -->
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-	<!-- CSS -->
-	<!-- load bootstrap and our own personal stylesheet -->
-	<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css" rel="stylesheet" />
-	<link rel="stylesheet" href="css/style.css" />
-</head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>This Is TextAnalysis Api!</h1>
+        <p>
+          Get text analysis extract an event from a text get a topic and a
+          sentiment of a text
+          <a href="https://github.com/freedomloader/text-analysis">@jbbunmat</a>
+        </p>
 
-<body>
-	<div class="container">
-		<div class="jumbotron">
-			<h1>This Is TextAnalysis Api!</h1>
-			<p>
-				Get text analysis extract an event from a text get a topic and a
-				sentiment of a text
-				<a href="https://github.com/freedomloader/text-analysis">@jbbunmat</a>
-			</p>
-			<a href="https://github.com/freedomloader/text-analysis" class="btn btn-primary btn-lg">Github</a>
-		</div>
-	</div>
-</body>
-
+        <form class="well form-search">
+          <input type="text" class="input-medium search-query" />
+          <button type="submit" class="btn btn-primary btn-lg">Search</button>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
