@@ -222,6 +222,9 @@ function isResultEvent(result) {
       result.flights ||
       result.airline ||
       result.ticket ||
+      result.alarm ||
+      result.schedule ||
+      result.attend ||
       result.tickets ||
       result.wedding ||
       result.burial ||
