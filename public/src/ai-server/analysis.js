@@ -248,6 +248,7 @@ function isResultEvent(result) {
       result.vigil ||
       result.visit ||
       result.visiting ||
+      result.date ||
       result.event ||
       result.events ||
       result.session ||
