@@ -10,22 +10,22 @@ var data = require("./analysisdata");
 async function getEventOnResult(text, result) {
   if (!result.topic || !result.topic.response) return "response failed ";
 
-  let new_result = [];
+  let new_result = {};
   const response = result.topic.response;
   if (isResultEvent(response)) {
-    new_result.push("Event Found");
+    new_result["Event"] = "Event Found";
 
-    new_result.push(parseActualDate(text));
-    new_result.push(dateFromString(text));
+    new_result["YearMonth"] = parseActualDate(text);
+    new_result["Actual Date"] = dateFromString(text);
 
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
     var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2}))/);
-    new_result.push(hour + ": at: " + time);
+    new_result["Time"] = hour + ": at: " + time;
 
     let addressParser = parseAddress(text, result.addresss);
-    new_result.push(addressParser);
+    new_result["Address"] = addressParser;
 
-    new_result.push(parseLemma(result));
+    new_result["Subject"] = parseLemma(result);
     return new_result;
   }
   return "event not found";
