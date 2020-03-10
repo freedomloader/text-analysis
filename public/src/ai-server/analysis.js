@@ -186,6 +186,7 @@ function monthNameToNum(monthname) {
 function isResultEvent(result) {
   try {
     if (
+      result.club ||
       result.game ||
       result.match ||
       result.boxing ||
@@ -227,6 +228,9 @@ function isResultEvent(result) {
       result.plans ||
       result.event ||
       result.events ||
+      result.session ||
+      result.resting ||
+      result.relaxing ||
       result.metting ||
       result.mettings ||
       result.appointment ||
