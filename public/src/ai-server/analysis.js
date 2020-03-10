@@ -189,6 +189,17 @@ function isResultEvent(result) {
       result.boxing ||
       result.football ||
       result.betting ||
+      result.show ||
+      result.stage ||
+      result.performance ||
+      result.music ||
+      result.movie ||
+      result.series ||
+      result.showcase ||
+      result.location ||
+      result.season ||
+      result.challange ||
+      result.story ||
       result.party ||
       result.occasion ||
       result.travel ||
