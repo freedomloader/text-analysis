@@ -194,12 +194,19 @@ function isResultEvent(result) {
       result.show ||
       result.stage ||
       result.performance ||
+      result.tv ||
       result.music ||
       result.movie ||
+      result.comedy ||
       result.series ||
+      result.season ||
+      result.started ||
+      result.working ||
+      result.employed ||
+      result.expire ||
+      result.hire ||
       result.showcase ||
       result.location ||
-      result.season ||
       result.challange ||
       result.story ||
       result.party ||
