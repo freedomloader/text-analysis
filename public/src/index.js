@@ -1,3 +1,7 @@
+const fs = require("fs");
+const util = require("util");
+const csv = require("csv-parser");
+const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 var HunmaAI = require("./ai-server/ai_human");
 var analysis = require("./ai-server/analysis");
 
@@ -8,7 +12,7 @@ const loadAnalysis = async (req, res) => {
       // ejs render automatically looks in the views folder
       res.render("index");
       //const noresult = { type: "No Request", count: "0" };
-      return;//res.status(400).send(noresult);
+      return; //res.status(400).send(noresult);
     }
 
     const result = await ai.getMain(req.query.text, true);
@@ -24,4 +28,49 @@ const loadAnalysis = async (req, res) => {
   }
 };
 
-module.exports = loadAnalysis;
+const readFile = util.promisify(fs.readFile);
+async function loadCSV(res, file) {
+  const data = await readFile(file, "utf8");
+  res.status(200).send(data);
+}
+
+async function csvToJSON(csvFile) {
+  let textrow = "";
+  await fs
+    .createReadStream(csvFile)
+    .pipe(csv())
+    .on("data", row => {
+      textrow += row;
+    })
+    .on("end", () => {
+      console.log("CSV file successfully processed");
+      return textrow;
+    });
+}
+
+async function jsonToCSV(data) {
+  const csvWriter = createCsvWriter({
+    path: "out.csv",
+    header: [
+      { id: "Event", title: "Event" },
+      { id: "YearMonth", title: "YearMonth" },
+      { id: "Actual Date", title: "Actual Date" },
+      { id: "Time", title: "Time" },
+      { id: "Address", title: "Address" },
+      { id: "Subject", title: "Subject" }
+    ]
+  });
+
+  const result = await csvWriter
+    .writeRecords(data)
+    .then(() => console.log("The CSV file was written successfully"));
+
+  return result;
+}
+
+const data = {
+  loadCSV: loadCSV,
+  csvToJSON: csvToJSON,
+  loadAnalysis: loadAnalysis
+};
+module.exports = data;

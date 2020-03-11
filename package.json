@@ -6,7 +6,7 @@
   "homepage": "https://freedomloader.github.io/text-analysis/",
   "scripts": {
     "start": "node server.js",
-    "dev-start": "babel-watch server",
+    "dev": "babel-watch server",
     "dev-build": "babel public/src --watch --presets @babel/preset-env --out-dir build"
   },
   "author": "John Bunmat",
@@ -18,7 +18,8 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
-    "gh-pages": "^2.2.0",
+    "csv-parser": "^2.3.2",
+    "csv-writer": "^1.6.0",
     "unirest": "^0.6.0",
     "date-fns": "2.9.0",
     "yarn": "^1.21.1"
