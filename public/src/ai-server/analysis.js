@@ -203,6 +203,8 @@ function isResultEvent(result) {
       result.season ||
       result.occure ||
       result.occuring ||
+      result.start ||
+      result.work ||
       result.ending ||
       result.starting ||
       result.appearance ||
