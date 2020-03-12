@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const util = require("util");
 const csv = require("csv-parser");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
@@ -9,10 +10,8 @@ const loadAnalysis = async (req, res) => {
   const ai = new HunmaAI();
   try {
     if (!req.query.text) {
-      // ejs render automatically looks in the views folder
       res.render("index");
-      //const noresult = { type: "No Request", count: "0" };
-      return; //res.status(400).send(noresult);
+      return;
     }
 
     const result = await ai.getMain(req.query.text, true);
@@ -22,6 +21,24 @@ const loadAnalysis = async (req, res) => {
     } else {
       const noresult = { type: "No Result found", count: "0" };
       return res.status(400).send(noresult);
+    }
+  } catch (error) {
+    return res.status(500).send({ error: error ? error.stack : null });
+  }
+};
+
+const loadWebAnalysis = async (req, res) => {
+  const ai = new HunmaAI();
+  try {
+    const eventText = req.query.text;
+
+    const result = await ai.getMain(eventText, true);
+    if (result) {
+      const new_result = await analysis(eventText, result);
+      const csvFile = await jsonToCSV(res, new_result);
+      await loadCSV(res, csvFile);
+    } else {
+      return res.status(400).send(null);
     }
   } catch (error) {
     return res.status(500).send({ error: error ? error.stack : null });
@@ -48,9 +65,9 @@ async function csvToJSON(csvFile) {
     });
 }
 
-async function jsonToCSV(data) {
+async function jsonToCSV(res, data) {
   const csvWriter = createCsvWriter({
-    path: "out.csv",
+    path: "./views/csv/eventout.csv",
     header: [
       { id: "Event", title: "Event" },
       { id: "YearMonth", title: "YearMonth" },
@@ -61,16 +78,23 @@ async function jsonToCSV(data) {
     ]
   });
 
-  const result = await csvWriter
-    .writeRecords(data)
-    .then(() => console.log("The CSV file was written successfully"));
+  let csvFile;;
+  let new_data = [];
+  new_data.push(data);
 
-  return result;
+  const result = await csvWriter.writeRecords(new_data).then(() => {
+    csvFile = path.resolve("./views/csv/eventout.csv");
+    console.log("The CSV file was written successfully");
+  });
+
+  return csvFile;
 }
 
 const data = {
   loadCSV: loadCSV,
   csvToJSON: csvToJSON,
-  loadAnalysis: loadAnalysis
+  jsonToCSV: jsonToCSV,
+  loadAnalysis: loadAnalysis,
+  loadWebAnalysis: loadWebAnalysis
 };
 module.exports = data;
