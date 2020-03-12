@@ -114,7 +114,6 @@ module.exports = class HunmaAI {
     if (mWithAddress) {
       var cities = require("../cities.json");
       const address = await cities;
-      //"https://raw.githubusercontent.com/David-Haim/CountriesToCitiesJSON/master/countriesToCities.json"
 
       result["addresss"] = address;
     }
