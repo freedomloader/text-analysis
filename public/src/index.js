@@ -51,7 +51,7 @@ const loadWebAnalysis = async (req, res) => {
 const readFile = util.promisify(fs.readFile);
 async function loadCSV(req, res, file) {
   const data = await readFile(file, "utf8");
-  if (req.query.format) {
+  if (file && req.query.format) {
     const type = req.query.format;
     if (type === "file") {
       return res.sendFile(file);
