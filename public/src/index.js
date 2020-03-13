@@ -5,6 +5,7 @@ const csv = require("csv-parser");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 var HunmaAI = require("./ai-server/ai_human");
 var analysis = require("./ai-server/analysis");
+const readFile = util.promisify(fs.readFile);
 
 const loadAnalysis = async (req, res) => {
   const ai = new HunmaAI();
@@ -39,7 +40,7 @@ const loadWebAnalysis = async (req, res) => {
     if (result) {
       const new_result = await analysis(eventText, result);
       const csvFile = await jsonToCSV(res, new_result);
-      await loadCSV(req, res, csvFile);
+      await loadCSV(req, res, csvFile, new_result);
     } else {
       return res.status(400).send(null);
     }
@@ -48,10 +49,9 @@ const loadWebAnalysis = async (req, res) => {
   }
 };
 
-const readFile = util.promisify(fs.readFile);
-async function loadCSV(req, res, file) {
+async function loadCSV(req, res, file, result) {
   const data = await readFile(file, "utf8");
-  if (file && req.query.format) {
+  if (result.Event && req.query.format) {
     const type = req.query.format;
     if (type === "file") {
       return res.sendFile(file);
@@ -91,7 +91,7 @@ async function jsonToCSV(res, data) {
   let new_data = [];
   new_data.push(data);
 
-  const result = await csvWriter.writeRecords(new_data).then(() => {
+  await csvWriter.writeRecords(new_data).then(() => {
     csvFile = path.resolve("./views/csv/eventout.csv");
     console.log("The CSV file was written successfully");
   });
