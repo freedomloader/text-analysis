@@ -12,15 +12,21 @@ async function getEventOnResult(text, result) {
 
   let new_result = {};
   const response = result.topic.response;
+
   if (isResultEvent(response)) {
+    var actualEventDate = dateFromString(text);
+
+    if (!actualEventDate)
+       return "event not found";
+    
     text = text.toLowerCase();
     new_result["Event"] = "Event Found";
 
     new_result["YearMonth"] = parseYearMonth(text);
-    new_result["Actual Date"] = dateFromString(text);
+    new_result["Actual Date"] = actualEventDate;
 
-    if (!new_result["YearMonth"] && new_result["Actual Date"]) {
-      const datee = new Date(new_result["Actual Date"]);
+    if (!new_result["YearMonth"] && actualEventDate) {
+      const datee = new Date(actualEventDate);
       new_result["YearMonth"] =
         datee.getFullYear() + " " + monthNumToName(datee.getMonth());
     }
@@ -259,6 +265,8 @@ function parseWeekMonthDate(stringToParse) {
       date = new Date(today.getFullYear(), today.getMonth() + 1, monthDay);
     }
   }
+
+
   if (!date) {
     const monthName = stringToParse.match(
       /\s*[0-9]{1,2}(?:(?: jan(?:uary)?)|(?: feb(?:uary)?)|(?: mar(?:ch)?)|(?: apr(?:il)?)|(?: may?)|(?: june)|(?: july)|(?: aug(?:ust)?)|(?: oct(?:ober)?)|(?: sept(?:ember)?)|(?: nov(?:ember)?)|(?: dec(?:ember)?))/
@@ -282,7 +290,8 @@ function monthNameToNum(monthname) {
   }
 }
 
-// day: 0=Sunday, 1=Monday...4=Thursday...
+// get a next day in date format
+// day: 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
 function nextDayAndTime(dayOfWeek, hour, minute) {
   var now = new Date();
   var result = new Date(
@@ -294,7 +303,6 @@ function nextDayAndTime(dayOfWeek, hour, minute) {
   );
 
   if (result < now) result.setDate(result.getDate() + 7);
-
   return result;
 }
 
