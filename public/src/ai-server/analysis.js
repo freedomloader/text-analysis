@@ -18,6 +18,10 @@ async function getEventOnResult(text, result) {
     new_result["YearMonth"] = parseActualDate(text);
     new_result["Actual Date"] = dateFromString(text);
 
+    if (!new_result["YearMonth"] && new_result["Actual Date"]) {
+      const datee = new Date(new_result["Actual Date"]).getFullYear();
+      new_result["YearMonth"] = datee +"";
+    }
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
     var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2}))/);
 
@@ -76,12 +80,13 @@ function parseAddress(text, addresss) {
     }
   }*/
 
+  var new_addresss = addresss.map(item => item.toLowerCase());
   let result = "";
   var arr = text.split(" ");
   for (let i = 0; i < arr.length; i++) {
     let ss = arr[i];
     ss = ss.endsWith(",") ? ss.substring(0, ss.length - 1) : ss;
-    if (addresss.indexOf(ss) !== -1) {
+    if (new_addresss.indexOf(ss) !== -1) {
       result += ss + " ";
     }
   }
@@ -95,23 +100,37 @@ function parseAddress(text, addresss) {
  */
 function parseActualDate(text) {
   var result;
-  var month;
-  var arr = text.split(" ");
-
-  for (let i = 0; i < arr.length; i++) {
-    if (monthNameToNum(arr[i].toLowerCase()) > 0) {
-      month = arr[i];
-      break;
-    }
-  }
+  const month = extractData(text, "month");
 
   var year = text.match(/[0-9]{4}(?:(?:))/);
   if (year && year[0] && year[0].startsWith("20")) {
     result = year[0] + " " + month;
   } else {
-    result = month;
+    result = month ? new Date().getFullYear + " " + month : month;
   }
   return result;
+}
+
+function extractData(text, type) {
+  var value;
+  var arr = text.split(" ");
+  if (type === "month") {
+    for (let i = 0; i < arr.length; i++) {
+      if (monthNameToNum(arr[i].toLowerCase()) > 0) {
+        value = arr[i];
+        break;
+      }
+    }
+  } else if (type === "nav") {
+    for (let i = 0; i < arr.length; i++) {
+      var navType = data.nav.indexOf(arr[i].toLowerCase());
+      if (navType !== -1) {
+        value = arr[i];
+        break;
+      }
+    }
+  }
+  return value;
 }
 
 /* Extract date from a string
@@ -162,6 +181,38 @@ function dateFromString(stringToParse) {
 
   //const DATE_FORMAT = "MM-dd-yyyy hh:mm:ss";
   //format(new Date(), DATE_FORMAT);
+
+  if (!date) {
+    const navType = extractData(stringToParse, "nav");
+    if (navType) {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      const yesterday = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      date =
+        navType === "today"
+          ? today
+          : navType === "tomorrow"
+          ? tomorrow
+          : navType === "yesterday"
+          ? yesterday
+          : null;
+    }
+
+    if (!date) {
+      var cdays = stringToParse.match(
+        /\b(?:(?: in|at|on|next))\s*[0-9]{1,2}(?:(?: days))/
+      );
+      if (cdays && cdays[0]) {
+        var days = cdays[0].match(/[0-9]/);
+        const eventDate = new Date(new Date());
+        eventDate.setDate(eventDate.getDate() + parseInt(days, 10));
+        date = eventDate;
+      }
+    }
+  }
   return "" + date;
 }
 
@@ -205,11 +256,12 @@ function isResultEvent(result) {
       result.occuring ||
       result.start ||
       result.work ||
+      result.starting ||
+      result.working ||
       result.ending ||
       result.starting ||
       result.appearance ||
       result.started ||
-      result.working ||
       result.employed ||
       result.expire ||
       result.hire ||
@@ -256,8 +308,8 @@ function isResultEvent(result) {
       result.session ||
       result.resting ||
       result.relaxing ||
-      result.metting ||
-      result.mettings ||
+      result.meeting ||
+      result.meetings ||
       result.appointment ||
       result.appointments
     ) {

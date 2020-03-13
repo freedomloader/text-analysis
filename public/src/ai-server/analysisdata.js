@@ -26,11 +26,12 @@ var months = [
   "november",
   "december"
 ];
+var nav = ["today", "tomorrow", "yesterday"];
 
 const data = {
+  nav: nav,
   months: months,
   monthsS: monthsS
 };
-
 
 module.exports = data;
