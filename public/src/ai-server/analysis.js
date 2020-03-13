@@ -187,6 +187,7 @@ function dateFromString(stringToParse) {
 }
 
 function parseNavDate(stringToParse) {
+  var date;
   const navType = extractData(stringToParse, "nav");
   if (navType) {
     const today = new Date();
@@ -207,10 +208,10 @@ function parseNavDate(stringToParse) {
       var days = cdays[0].match(/[0-9]{1,2}/);
       const eventDate = new Date(new Date());
       eventDate.setDate(eventDate.getDate() + parseInt(days, 10));
-      return eventDate;
+      date = eventDate;
     }
   }
-  return null;
+  return date;
 }
 
 function parseWeekMonthDate(stringToParse) {
@@ -219,12 +220,12 @@ function parseWeekMonthDate(stringToParse) {
     /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)?\b(?:(?: next))\b(?:(?: week))/
   );
 
-  nwdays =
-    nwdays && nwdays[0]
-      ? nwdays
-      : stringToParse.match(
-          /\b(?:(?: next))\b(?:(?: week))\b(?:(?: mon)|(?: tues?)|(?: wed(?:nes)?)|(?: thur?s?)|(?: fri)|(?: sat(?:ur)?)|(?: sun))(?:day)/
-        );
+  if (!nwdays || !nwdays[0]) {
+    nwdays = stringToParse.match(
+      /\b(?:(?: next))\b(?:(?: week))\b(?:(?: mon)|(?: tues?)|(?: wed(?:nes)?)|(?: thur?s?)|(?: fri)|(?: sat(?:ur)?)|(?: sun))(?:day)/
+    );
+  }
+
   if (nwdays && nwdays[0]) {
     const dayName = nwdays[0].match(
       /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)/
