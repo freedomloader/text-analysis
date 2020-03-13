@@ -17,8 +17,8 @@ async function getEventOnResult(text, result) {
     var actualEventDate = dateFromString(text);
 
     if (!actualEventDate)
-       return "event not found";
-    
+      return "event not found";
+
     text = text.toLowerCase();
     new_result["Event"] = "Event Found";
 
@@ -27,12 +27,11 @@ async function getEventOnResult(text, result) {
 
     if (!new_result["YearMonth"] && actualEventDate) {
       const datee = new Date(actualEventDate);
-      new_result["YearMonth"] =
-        datee.getFullYear() + " " + monthNumToName(datee.getMonth());
+      new_result["YearMonth"] = datee.getFullYear() + " " + monthNumToName(datee.getMonth());
     }
 
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
-    var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2}))/);
+    var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{2})|(?: [0-9]{2}))/);
     new_result["Time"] = hour + ": at: " + time;
 
     let addressParser = parseAddress(text, result.addresss);
@@ -265,7 +264,6 @@ function parseWeekMonthDate(stringToParse) {
       date = new Date(today.getFullYear(), today.getMonth() + 1, monthDay);
     }
   }
-
 
   if (!date) {
     const monthName = stringToParse.match(

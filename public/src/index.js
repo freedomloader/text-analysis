@@ -13,6 +13,9 @@ const loadAnalysis = async (req, res) => {
       res.render("index");
       return;
     }
+    if (req.query.format) {
+      return await loadWebAnalysis(req, res);
+    }
 
     const result = await ai.getMain(req.query.text, true);
     if (result) {
@@ -36,7 +39,7 @@ const loadWebAnalysis = async (req, res) => {
     if (result) {
       const new_result = await analysis(eventText, result);
       const csvFile = await jsonToCSV(res, new_result);
-      await loadCSV(res, csvFile);
+      await loadCSV(req, res, csvFile);
     } else {
       return res.status(400).send(null);
     }
@@ -46,8 +49,14 @@ const loadWebAnalysis = async (req, res) => {
 };
 
 const readFile = util.promisify(fs.readFile);
-async function loadCSV(res, file) {
+async function loadCSV(req, res, file) {
   const data = await readFile(file, "utf8");
+  if (req.query.format) {
+    const type = req.query.format;
+    if (type === "file") {
+      return res.sendFile(file);
+    }
+  }
   res.status(200).send(data);
 }
 
