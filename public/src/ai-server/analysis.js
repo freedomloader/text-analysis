@@ -1,7 +1,7 @@
 //import { format } from "date-fns";
 var data = require("./analysisdata");
 
-/* Check if text is a event or metting or an appoinment
+/* Check if text is a event or meeting or an appoinment
  *   and return a result base on the request
  * @param text a full string to check
  * @param result a compressed string to check
@@ -16,13 +16,13 @@ async function getEventOnResult(text, result) {
     text = text.toLowerCase();
     new_result["Event"] = "Event Found";
 
-    new_result["YearMonth"] = parseActualDate(text);
+    new_result["YearMonth"] = parseYearMonth(text);
     new_result["Actual Date"] = dateFromString(text);
 
     if (!new_result["YearMonth"] && new_result["Actual Date"]) {
       const datee = new Date(new_result["Actual Date"]);
       new_result["YearMonth"] =
-        datee.getFullYear() + " " + monthNumToName(datee.getMonth() + 1);
+        datee.getFullYear() + " " + monthNumToName(datee.getMonth());
     }
 
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
@@ -94,12 +94,12 @@ function parseAddress(text, addresss) {
   return result;
 }
 
-/* Extract actual date from an event
+/* Extract year month date from an event
  * @param text a full server response
  * @param response a complie response
- * @return actual date
+ * @return year month
  */
-function parseActualDate(text) {
+function parseYearMonth(text) {
   var result;
   const month = extractData(text, "month");
 
@@ -107,7 +107,7 @@ function parseActualDate(text) {
   if (year && year[0] && year[0].startsWith("20")) {
     result = year[0] + " " + month;
   } else {
-    result = month ? new Date().getFullYear + " " + month : month;
+    result = month ? new Date().getFullYear() + " " + month : month;
   }
   return result;
 }
@@ -150,6 +150,8 @@ function dateFromString(stringToParse) {
     );
   }
 
+  //here we check for date
+  //example 3/21/2020
   var date;
   var ssdate = stringToParse.match(
     /(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2})/
@@ -166,6 +168,8 @@ function dateFromString(stringToParse) {
     }
   }
 
+  //here we check for date
+  //example mon feb 4 2020
   if (!date) {
     ssdate = stringToParse.match(
       /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)?\b[:\-,]?\s*(?:(?:jan|feb)?r?(?:uary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|oct(?:ober)?|(?:sept?|nov|dec)(?:ember)?)\s+\d{1,2}\s*,?\s*\d{4}/i
@@ -173,6 +177,8 @@ function dateFromString(stringToParse) {
     if (ssdate) date = new Date(ssdate);
   }
 
+  //here we check for date
+  //example 3/21/2020
   if (!date) {
     ssdate = stringToParse.match(
       /\b[:\-,]?\s*[a-zA-Z]{3,9}\s+\d{1,2}\s*,?\s*\d{4}/
@@ -180,8 +186,12 @@ function dateFromString(stringToParse) {
     if (ssdate) date = new Date(ssdate);
   }
 
+  //here we check for nav date
+  //example today,tomorrow,yesterday
   if (!date) date = parseNavDate(stringToParse);
 
+  //here we check for week month date
+  //example (next week), (next month), (actual week,month,year in time)
   if (!date) date = parseWeekMonthDate(stringToParse);
   return "" + date;
 }
@@ -215,6 +225,7 @@ function parseNavDate(stringToParse) {
 }
 
 function parseWeekMonthDate(stringToParse) {
+  const today = new Date();
   var date;
   var nwdays = stringToParse.match(
     /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)?\b(?:(?: next))\b(?:(?: week))/
@@ -239,12 +250,26 @@ function parseWeekMonthDate(stringToParse) {
   }
 
   if (!date) {
+    var nmdays = stringToParse.match(
+      /[0-9]{1,2}?\b(?:(?: next))\b(?:(?: month))/
+    );
+
+    if (nmdays && nmdays[0]) {
+      const monthDay = nmdays[0].match(/[0-9]{1,2}/);
+      date = new Date(today.getFullYear(), today.getMonth() + 1, monthDay);
+    }
+  }
+  if (!date) {
+    const monthName = stringToParse.match(
+      /\s*[0-9]{1,2}(?:(?: jan(?:uary)?)|(?: feb(?:uary)?)|(?: mar(?:ch)?)|(?: apr(?:il)?)|(?: may?)|(?: june)|(?: july)|(?: aug(?:ust)?)|(?: oct(?:ober)?)|(?: sept(?:ember)?)|(?: nov(?:ember)?)|(?: dec(?:ember)?))/
+    );
+    date = new Date(monthName + " 2020");
   }
   return date;
 }
 
 function monthNumToName(monthnum) {
-  return data.months[monthnum - 1] || "";
+  return data.months[monthnum] || "";
 }
 
 function monthNameToNum(monthname) {
@@ -281,6 +306,8 @@ function isResultEvent(result) {
   try {
     if (
       result.club ||
+      result.clubing ||
+      result.clubbing ||
       result.game ||
       result.match ||
       result.boxing ||
