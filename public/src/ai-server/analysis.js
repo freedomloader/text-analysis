@@ -19,8 +19,8 @@ async function getEventOnResult(text, result) {
     new_result["Actual Date"] = dateFromString(text);
 
     if (!new_result["YearMonth"] && new_result["Actual Date"]) {
-      const datee = new Date(new_result["Actual Date"]).getFullYear();
-      new_result["YearMonth"] = datee +"";
+      const datee = new Date(new_result["Actual Date"]);
+      new_result["YearMonth"] = datee.getFullYear() + " " + monthNumToName(datee.getMonth() + 1);
     }
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
     var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2}))/);
@@ -203,10 +203,10 @@ function dateFromString(stringToParse) {
 
     if (!date) {
       var cdays = stringToParse.match(
-        /\b(?:(?: in|at|on|next))\s*[0-9]{1,2}(?:(?: days))/
+        /\b(?:(?: in|at|on|next|after))\s*[0-9]{1,2}(?:(?: days))/
       );
       if (cdays && cdays[0]) {
-        var days = cdays[0].match(/[0-9]/);
+        var days = cdays[0].match(/[0-9]{1,2}/);
         const eventDate = new Date(new Date());
         eventDate.setDate(eventDate.getDate() + parseInt(days, 10));
         date = eventDate;
