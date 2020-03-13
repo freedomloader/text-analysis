@@ -263,7 +263,7 @@ function parseWeekMonthDate(stringToParse) {
     const monthName = stringToParse.match(
       /\s*[0-9]{1,2}(?:(?: jan(?:uary)?)|(?: feb(?:uary)?)|(?: mar(?:ch)?)|(?: apr(?:il)?)|(?: may?)|(?: june)|(?: july)|(?: aug(?:ust)?)|(?: oct(?:ober)?)|(?: sept(?:ember)?)|(?: nov(?:ember)?)|(?: dec(?:ember)?))/
     );
-    date = new Date(monthName + " 2020");
+    date = new Date(monthName + " " + today.getFullYear());
   }
   return date;
 }
