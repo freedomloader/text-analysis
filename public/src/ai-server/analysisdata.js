@@ -27,11 +27,21 @@ var months = [
   "december"
 ];
 var nav = ["today", "tomorrow", "yesterday"];
+var weekDays = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday"
+];
 
 const data = {
   nav: nav,
   months: months,
-  monthsS: monthsS
+  monthsS: monthsS,
+  weekDays: weekDays
 };
 
 module.exports = data;

@@ -31,8 +31,8 @@ const loadWebAnalysis = async (req, res) => {
   const ai = new HunmaAI();
   try {
     const eventText = req.query.text;
-
     const result = await ai.getMain(eventText, true);
+
     if (result) {
       const new_result = await analysis(eventText, result);
       const csvFile = await jsonToCSV(res, new_result);
@@ -78,7 +78,7 @@ async function jsonToCSV(res, data) {
     ]
   });
 
-  let csvFile;;
+  let csvFile;
   let new_data = [];
   new_data.push(data);
 

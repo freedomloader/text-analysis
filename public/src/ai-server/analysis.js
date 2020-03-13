@@ -13,6 +13,7 @@ async function getEventOnResult(text, result) {
   let new_result = {};
   const response = result.topic.response;
   if (isResultEvent(response)) {
+    text = text.toLowerCase();
     new_result["Event"] = "Event Found";
 
     new_result["YearMonth"] = parseActualDate(text);
@@ -20,12 +21,12 @@ async function getEventOnResult(text, result) {
 
     if (!new_result["YearMonth"] && new_result["Actual Date"]) {
       const datee = new Date(new_result["Actual Date"]);
-      new_result["YearMonth"] = datee.getFullYear() + " " + monthNumToName(datee.getMonth() + 1);
+      new_result["YearMonth"] =
+        datee.getFullYear() + " " + monthNumToName(datee.getMonth() + 1);
     }
+
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
     var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2}))/);
-
-    //var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{1,2})|(?: [0-9]{1,2}))/);
     new_result["Time"] = hour + ": at: " + time;
 
     let addressParser = parseAddress(text, result.addresss);
@@ -167,7 +168,7 @@ function dateFromString(stringToParse) {
 
   if (!date) {
     ssdate = stringToParse.match(
-      /\b(?:(?:Mon)|(?:Tues?)|(?:Wed(?:nes)?)|(?:Thur?s?)|(?:Fri)|(?:Sat(?:ur)?)|(?:Sun))(?:day)?\b[:\-,]?\s*(?:(?:jan|feb)?r?(?:uary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|oct(?:ober)?|(?:sept?|nov|dec)(?:ember)?)\s+\d{1,2}\s*,?\s*\d{4}/i
+      /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)?\b[:\-,]?\s*(?:(?:jan|feb)?r?(?:uary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|oct(?:ober)?|(?:sept?|nov|dec)(?:ember)?)\s+\d{1,2}\s*,?\s*\d{4}/i
     );
     if (ssdate) date = new Date(ssdate);
   }
@@ -179,41 +180,66 @@ function dateFromString(stringToParse) {
     if (ssdate) date = new Date(ssdate);
   }
 
-  //const DATE_FORMAT = "MM-dd-yyyy hh:mm:ss";
-  //format(new Date(), DATE_FORMAT);
+  if (!date) date = parseNavDate(stringToParse);
+
+  if (!date) date = parseWeekMonthDate(stringToParse);
+  return "" + date;
+}
+
+function parseNavDate(stringToParse) {
+  const navType = extractData(stringToParse, "nav");
+  if (navType) {
+    const today = new Date();
+    today.setDate(
+      data.nav.indexOf(navType) == 2
+        ? today.getDate() - 1
+        : today.getDate() + data.nav.indexOf(navType)
+    );
+
+    date = today;
+  }
 
   if (!date) {
-    const navType = extractData(stringToParse, "nav");
-    if (navType) {
-      const today = new Date();
-      const tomorrow = new Date(today);
-      const yesterday = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      yesterday.setDate(yesterday.getDate() - 1);
-
-      date =
-        navType === "today"
-          ? today
-          : navType === "tomorrow"
-          ? tomorrow
-          : navType === "yesterday"
-          ? yesterday
-          : null;
-    }
-
-    if (!date) {
-      var cdays = stringToParse.match(
-        /\b(?:(?: in|at|on|next|after))\s*[0-9]{1,2}(?:(?: days))/
-      );
-      if (cdays && cdays[0]) {
-        var days = cdays[0].match(/[0-9]{1,2}/);
-        const eventDate = new Date(new Date());
-        eventDate.setDate(eventDate.getDate() + parseInt(days, 10));
-        date = eventDate;
-      }
+    var cdays = stringToParse.match(
+      /\b(?:(?: in|at|on|next|after))\s*[0-9]{1,2}(?:(?: days))/
+    );
+    if (cdays && cdays[0]) {
+      var days = cdays[0].match(/[0-9]{1,2}/);
+      const eventDate = new Date(new Date());
+      eventDate.setDate(eventDate.getDate() + parseInt(days, 10));
+      return eventDate;
     }
   }
-  return "" + date;
+  return null;
+}
+
+function parseWeekMonthDate(stringToParse) {
+  var date;
+  var nwdays = stringToParse.match(
+    /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)?\b(?:(?: next))\b(?:(?: week))/
+  );
+
+  nwdays =
+    nwdays && nwdays[0]
+      ? nwdays
+      : stringToParse.match(
+          /\b(?:(?: next))\b(?:(?: week))\b(?:(?: mon)|(?: tues?)|(?: wed(?:nes)?)|(?: thur?s?)|(?: fri)|(?: sat(?:ur)?)|(?: sun))(?:day)/
+        );
+  if (nwdays && nwdays[0]) {
+    const dayName = nwdays[0].match(
+      /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)/
+    );
+    const weekDate = nextDayAndTime(
+      data.weekDays.indexOf(dayName[0]),
+      7,
+      30
+    ).toString();
+    date = weekDate;
+  }
+
+  if (!date) {
+  }
+  return date;
 }
 
 function monthNumToName(monthnum) {
@@ -228,6 +254,22 @@ function monthNameToNum(monthname) {
   } else {
     return month + 1;
   }
+}
+
+// day: 0=Sunday, 1=Monday...4=Thursday...
+function nextDayAndTime(dayOfWeek, hour, minute) {
+  var now = new Date();
+  var result = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + ((7 + dayOfWeek - now.getDay()) % 7),
+    hour,
+    minute
+  );
+
+  if (result < now) result.setDate(result.getDate() + 7);
+
+  return result;
 }
 
 /* Check if string is an event
