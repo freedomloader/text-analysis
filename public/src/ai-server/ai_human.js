@@ -44,6 +44,18 @@ module.exports = class HunmaAI {
     }
   }
 
+  //retrieve the client's IP address
+  //and return location using free active IP lookup services
+  async getAddressLocation() {
+    let response = await axios.get("http://ip-api.com/json");//http://www.geoplugin.net/json.gp
+
+    const body = response.data;
+    if (body && body.status === "success") {
+      return { response: "response", result: body };
+    }
+    return { response: "response", result: null };
+  }
+
   //Return sentiment analysis results with score for the given text.
   //get possibility of a text either positive or negative
   async getWordAISentiment(q) {
@@ -97,11 +109,14 @@ module.exports = class HunmaAI {
 
   async getMain(q, mWithAddress) {
     var result = { type: "all" };
+    let address;
 
     try {
+      let address = await this.getAddressLocation();
       const topic = await this.getWordAITopic(q);
       const lemma = await this.getAIWordLemma(q);
 
+      result["curAddress"] = await address.result;
       result["topic"] = await topic.result;
       result["lemma"] = await lemma.result;
 
@@ -109,6 +124,9 @@ module.exports = class HunmaAI {
     } catch (e) {
       result["topic"] = { response: await this.textToSplit(q) };
       result["lemma"] = { lemma: q.split(" ") };
+
+      if (!result["curAddress"])
+        result["curAddress"] = address ? await address.result : null;
     }
 
     if (mWithAddress) {

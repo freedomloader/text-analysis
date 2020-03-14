@@ -16,10 +16,9 @@ async function getEventOnResult(text, result) {
   if (isResultEvent(response)) {
     var actualEventDate = dateFromString(text);
 
-    if (!actualEventDate)
-      return "event not found";
+    if (!actualEventDate) return "event not found";
 
-    text = text.toLowerCase();
+    text = text.trim().toLowerCase();
     new_result["Event"] = "Event Found";
 
     new_result["YearMonth"] = parseYearMonth(text);
@@ -27,7 +26,8 @@ async function getEventOnResult(text, result) {
 
     if (!new_result["YearMonth"] && actualEventDate) {
       const datee = new Date(actualEventDate);
-      new_result["YearMonth"] = datee.getFullYear() + " " + monthNumToName(datee.getMonth());
+      new_result["YearMonth"] =
+        datee.getFullYear() + " " + monthNumToName(datee.getMonth());
     }
 
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
@@ -35,6 +35,9 @@ async function getEventOnResult(text, result) {
     new_result["Time"] = hour + ": at: " + time;
 
     let addressParser = parseAddress(text, result.addresss);
+    if (!addressParser && result.curAddress) {
+      addressParser = result.curAddress.country +" "+ result.curAddress.city;
+    }
     new_result["Address"] = addressParser;
 
     new_result["Subject"] = parseLemma(result);
@@ -203,9 +206,9 @@ function dateFromString(stringToParse) {
 
 function parseNavDate(stringToParse) {
   var date;
+  const today = new Date();
   const navType = extractData(stringToParse, "nav");
   if (navType) {
-    const today = new Date();
     today.setDate(
       data.nav.indexOf(navType) == 2
         ? today.getDate() - 1
@@ -217,14 +220,21 @@ function parseNavDate(stringToParse) {
 
   if (!date) {
     var cdays = stringToParse.match(
-      /\b(?:(?: in|at|on|next|after))\s*[0-9]{1,2}(?:(?: days))/
+      /\b(?:(?: in|at|on|next|after))\s*[0-9]{1,2}(?:(?: day|days))/
     );
     if (cdays && cdays[0]) {
       var days = cdays[0].match(/[0-9]{1,2}/);
-      const eventDate = new Date(new Date());
-      eventDate.setDate(eventDate.getDate() + parseInt(days, 10));
-      date = eventDate;
+      today.setDate(today.getDate() + parseInt(days, 10));
+      date = today;
     }
+  }
+
+  if (!date && (cdays = stringToParse.match(/(?:(?: on))\s*[0-9]{1,2}/))) {
+    date = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      cdays[0].match(/[0-9]{1,2}/)
+    );
   }
   return date;
 }
@@ -267,9 +277,11 @@ function parseWeekMonthDate(stringToParse) {
 
   if (!date) {
     const monthName = stringToParse.match(
-      /\s*[0-9]{1,2}(?:(?: jan(?:uary)?)|(?: feb(?:uary)?)|(?: mar(?:ch)?)|(?: apr(?:il)?)|(?: may?)|(?: june)|(?: july)|(?: aug(?:ust)?)|(?: oct(?:ober)?)|(?: sept(?:ember)?)|(?: nov(?:ember)?)|(?: dec(?:ember)?))/
+      /\s*[0-9]{1,2}(?:(?: jan(?:uary)?)|(?: feb(?:uary)?)|(?: mar(?:ch)?)|(?: apr(?:il)?)|(?: may?)|(?: june)|(?: july)|(?: aug(?:ust)?)|(?: oct(?:ober)?)|(?: sept(?:ember)?)|(?: nov(?:ember)?)|(?: dec(?:ember)?))|(?:(?: jan(?:uary)?)|(?: feb(?:uary)?)|(?: mar(?:ch)?)|(?: apr(?:il)?)|(?: may?)|(?: june)|(?: july)|(?: aug(?:ust)?)|(?: oct(?:ober)?)|(?: sept(?:ember)?)|(?: nov(?:ember)?)|(?: dec(?:ember)?))\s*[0-9]{1,2}/
     );
-    date = new Date(monthName + " " + today.getFullYear());
+    if (monthName && monthName[0]) {
+      date = new Date(monthName + " " + today.getFullYear());
+    }
   }
   return date;
 }
@@ -311,6 +323,11 @@ function nextDayAndTime(dayOfWeek, hour, minute) {
 function isResultEvent(result) {
   try {
     if (
+      result.nba ||
+      result.sport ||
+      result.play ||
+      result.playing ||
+      result.accident ||
       result.club ||
       result.clubing ||
       result.clubbing ||
@@ -361,6 +378,7 @@ function isResultEvent(result) {
       result.die ||
       result.dead ||
       result.birth ||
+      result.birthday ||
       result.sex ||
       result.kill ||
       result.plans ||
@@ -387,7 +405,9 @@ function isResultEvent(result) {
       result.meeting ||
       result.meetings ||
       result.appointment ||
-      result.appointments
+      result.appointments ||
+      result.court ||
+      result.delay
     ) {
       return true;
     }
