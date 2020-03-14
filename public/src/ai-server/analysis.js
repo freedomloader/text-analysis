@@ -18,7 +18,7 @@ async function getEventOnResult(text, result) {
 
     if (!actualEventDate) return "event not found";
 
-    text = text.trim().toLowerCase();
+    text = text.toLowerCase();
     new_result["Event"] = "Event Found";
 
     new_result["YearMonth"] = parseYearMonth(text);
@@ -36,7 +36,7 @@ async function getEventOnResult(text, result) {
 
     let addressParser = parseAddress(text, result.addresss);
     if (!addressParser && result.curAddress) {
-      addressParser = result.curAddress.country +" "+ result.curAddress.city;
+      addressParser = result.curAddress.country + " " + result.curAddress.city;
     }
     new_result["Address"] = addressParser;
 
