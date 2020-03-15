@@ -14,11 +14,11 @@ async function getEventOnResult(text, result) {
   const response = result.topic.response;
 
   if (isResultEvent(response)) {
-    var actualEventDate = dateFromString(text);
+    text = text.trim().toLowerCase();
 
+    var actualEventDate = dateFromString(text);
     if (!actualEventDate) return "event not found";
 
-    text = text.toLowerCase();
     new_result["Event"] = "Event Found";
 
     new_result["YearMonth"] = parseYearMonth(text);
