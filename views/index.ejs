@@ -1,70 +1,100 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 	<meta charset="UTF-8" />
 	<title>Text Analysis Api</title>
+	<link rel='stylesheet' id='themefisher-bootstrap-css'
+		href='https://themefisher.com/wp-content/themes/themefisher-kanchenjunga/assets/bootstrap/css/bootstrap.min.css?ver=6d5e3b09dcfdc0e3f3d10794557de0bf'
+		type='text/css' media='all' />
 
-	<!-- CSS -->
-	<!-- load bootstrap and our own personal stylesheet -->
-	<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css" rel="stylesheet" />
-	<link rel="stylesheet" href="css/style.css" />
+	<!-- load bootstrap-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 </head>
+<style>
 
-<body>
-	<div class="container">
-		<div class="jumbotron">
-			<p>
-				Text analysis extract an event from a text
-				<a href="https://github.com/freedomloader/text-analysis">@jbbunmat</a>
-			</p>
-			<p>
-				Api url
-				<a
-					href="https://text-analysiss.herokuapp.com/?text=youreventtext">https://text-analysiss.herokuapp.com/?text=youreventtext</a>
-			</p>
-			<p>
-				Api csv file download 
-				<a
-					href="https://text-analysiss.herokuapp.com/?format=file&text=youreventtext">https://text-analysiss.herokuapp.com/?format=file&text=youreventtext</a>
-			</p>
+</style>
+
+<!-- 
+	<img width="350px"
+		src="https://themefisher.com/wp-content/themes/themefisher-kanchenjunga/assets/images/email.gif"
+	    srcset="https://themefisher.com/wp-content/themes/themefisher-kanchenjunga/assets/images/email.gif"
+		nopin="nopin">
+-->
+<body data-rsssl=1>
+	<section class="wrapper">
+		<section class="section-sm">
 			<div class="container">
-				<form id="form" action="/eventcsv" title="" method="GET">
-					<div class="form-group">
-						<label for="event">Enter Your Event Message:</label>
-						<textarea type="text" class="form-control" id="event" name="event" placeholder="Enter event"
-							rows="3" cols="50"></textarea>
-					</div>
-					<button type="submit" name="load_data" id="load_data" class="btn btn-info">
-						Load Data
-					</button>
-				</form>
-				<div class="container">
-					<div class="table-responsive">
-						<br />
-						<br />
-						<div id="employee_table"></div>
+				<div class="row">
+					<div class="col-md-8 mx-auto">
+						<div class="shadow text-center p-5">
+							<img width="350px" src="https://themefisher.com/wp-content/themes/themefisher-kanchenjunga/assets/images/email.gif"
+								srcset="https://themefisher.com/wp-content/themes/themefisher-kanchenjunga/assets/images/email.gif" nopin="nopin">
+							<h1 class="mt-4">Text analysis extract an event from a text
+								<a href="https://github.com/freedomloader/text-analysis">@jbbunmat</a>. </h1>
+							<p class="mt-3">Example of event text. <strong> (I have a meeting today at 3 40)</strong>
+								<strong> (I have a meeting on friday at 4 20)</strong>
+								<strong> (I have a meeting on 22 at 1 30)</strong>.</p>
+		
+							<form id="form" action="/eventcsv" title="" method="GET">
+								<div class="form-group">
+									<label for="event">Enter Your Event Message:</label>
+									<textarea type="text" class="form-control" id="event" name="event" placeholder="Enter event"
+										rows="3" cols="50"></textarea>
+								</div>
+								<button type="submit" name="load_data" id="load_data" class="btn btn-info">
+									Load Data
+								</button>
+							</form>
+							<div class="container">
+								<div class="table-responsive">
+									<br />
+									<br />
+									<div id="employee_table"></div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</body>
+		</section>
 
+		<section class="section-sm">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 mx-auto">
+						<div class="shadow text-center p-5">
+							<p>
+								Api url
+								<a
+									href="https://text-analysiss.herokuapp.com/?text=youreventtext">https://text-analysiss.herokuapp.com/?text=youreventtext</a>
+							</p>
+							<p>
+								Api csv file download
+								<a
+									href="https://text-analysiss.herokuapp.com/?format=file&text=youreventtext">https://text-analysiss.herokuapp.com/?format=file&text=youreventtext</a>
+							</p>
+		
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</section>
+	</section>
+	</div><!-- #page -->
+</body>
 </html>
 
 <script type="text/javascript">
 	$("#form").submit(function (event) {
 		event.preventDefault();
-
 		var $form = $(this),
 			url = $form.attr("action");
-
 		const eventText = $("#event").val();
-
 		$.ajax({
 			url: "/eventcsv",
 			dataType: "text",

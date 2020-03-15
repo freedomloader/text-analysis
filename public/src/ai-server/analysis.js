@@ -252,6 +252,10 @@ function parseWeekMonthDate(stringToParse) {
     );
   }
 
+  if (!nwdays || !nwdays[0]) {
+    nwdays = stringToParse.match(/(?:(?: on))\b(?:(?: mon)|(?: tues?)|(?: wed(?:nes)?)|(?: thur?s?)|(?: fri)|(?: sat(?:ur)?)|(?: sun))(?:day)/);
+  }
+
   if (nwdays && nwdays[0]) {
     const dayName = nwdays[0].match(
       /\b(?:(?:mon)|(?:tues?)|(?:wed(?:nes)?)|(?:thur?s?)|(?:fri)|(?:sat(?:ur)?)|(?:sun))(?:day)/
