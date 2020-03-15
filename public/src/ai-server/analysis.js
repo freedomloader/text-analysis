@@ -32,7 +32,8 @@ async function getEventOnResult(text, result) {
 
     var hour = text.match(/[0-9]{1,2}(?:(?: hour))/);
     var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{2})|(?: [0-9]{2}))/);
-    new_result["Time"] = hour + ": at: " + time;
+    new_result["Time"] =
+      (hour ? hour + ": at: " : "") + time ? time[0].replace(/\s+/g, ":") : "";
 
     let addressParser = parseAddress(text, result.addresss);
     if (!addressParser && result.curAddress) {
@@ -253,7 +254,9 @@ function parseWeekMonthDate(stringToParse) {
   }
 
   if (!nwdays || !nwdays[0]) {
-    nwdays = stringToParse.match(/(?:(?: on))\b(?:(?: mon)|(?: tues?)|(?: wed(?:nes)?)|(?: thur?s?)|(?: fri)|(?: sat(?:ur)?)|(?: sun))(?:day)/);
+    nwdays = stringToParse.match(
+      /(?:(?: on))\b(?:(?: mon)|(?: tues?)|(?: wed(?:nes)?)|(?: thur?s?)|(?: fri)|(?: sat(?:ur)?)|(?: sun))(?:day)/
+    );
   }
 
   if (nwdays && nwdays[0]) {
