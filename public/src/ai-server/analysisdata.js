@@ -37,11 +37,52 @@ var weekDays = [
   "saturday"
 ];
 
+var commonWords = [
+  "i",
+  "a",
+  "about",
+  "an",
+  "and",
+  "are",
+  "as",
+  "at",
+  "be",
+  "by",
+  "com",
+  "de",
+  "en",
+  "for",
+  "from",
+  "how",
+  "in",
+  "is",
+  "it",
+  "la",
+  "of",
+  "on",
+  "or",
+  "that",
+  "the",
+  "this",
+  "to",
+  "have",
+  "was",
+  "what",
+  "when",
+  "where",
+  "who",
+  "will",
+  "with",
+  "und",
+  "the",
+  "www"
+];
 const data = {
   nav: nav,
   months: months,
   monthsS: monthsS,
-  weekDays: weekDays
+  weekDays: weekDays,
+  commonWords: commonWords
 };
 
 module.exports = data;

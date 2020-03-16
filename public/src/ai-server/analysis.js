@@ -19,7 +19,7 @@ async function getEventOnResult(text, result) {
   const response = result.topic.response;
 
   if (isResultEvent(response)) {
-    text = text.trim().toLowerCase();
+    text = lowercase(text.trim());
 
     var actualEventDate = dateFromString(text);
     if (!actualEventDate) return "event not found";
@@ -349,6 +349,11 @@ function nextDayAndTime(dayOfWeek, hour, minute) {
 
   if (result < now) result.setDate(result.getDate() + 7);
   return result;
+}
+
+// Make value a lower-case.
+function lowercase(value) {
+  return String(value).toLowerCase();
 }
 
 /* Check if string is an event

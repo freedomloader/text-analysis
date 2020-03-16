@@ -1,4 +1,6 @@
 var axios = require("axios");
+var data = require("./analysisdata");
+
 module.exports = class HunmaAI {
   constructor() {
     this.url = "https://www.twinword.com/api/";
@@ -47,7 +49,7 @@ module.exports = class HunmaAI {
   //retrieve the client's IP address
   //and return location using free active IP lookup services
   async getAddressLocation() {
-    let response = await axios.get("http://ip-api.com/json");//http://www.geoplugin.net/json.gp
+    let response = await axios.get("http://ip-api.com/json"); //http://www.geoplugin.net/json.gp
 
     const body = response.data;
     if (body && body.status === "success") {
@@ -123,7 +125,7 @@ module.exports = class HunmaAI {
       result.topic.response;
     } catch (e) {
       result["topic"] = { response: await this.textToSplit(q) };
-      result["lemma"] = { lemma: q.split(" ") };
+      result["lemma"] = { lemma: await this.checkUnnesessaryText(q) };
 
       if (!result["curAddress"])
         result["curAddress"] = address ? await address.result : null;
@@ -146,6 +148,21 @@ module.exports = class HunmaAI {
       let ss = arr[i];
       result[ss] = 1;
     }
+    return result;
+  }
+
+  async checkUnnesessaryText(text) {
+    // Convert to lowercase
+    text = text.toLowerCase();
+
+    // replace unnesessary words.
+    text = text.replace(/[^\w\d ]/g, "");
+    var result = await text.split(" ");
+
+    // remove commonWords from text
+    result = await result.filter(function(word) {
+      return data.commonWords.indexOf(word) === -1;
+    });
     return result;
   }
 
