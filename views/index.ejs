@@ -103,9 +103,16 @@
 									<textarea type="text" class="form-control" id="event" name="event" placeholder="Enter event"
 										rows="3" cols="50"></textarea>
 								</div>
-								<button type="submit" name="load_data" id="load_data" class="btn btn-info">
-									Load Data
-								</button>
+								<p style="text-align:left;">
+									<button type="submit" name="load_data" id="load_data" class="btn btn-info">
+										Load Data
+									</button>
+									<span style="float:right;">
+										<button type="download" name="download_csv" id="download_csv" class="btn btn-info">
+											Download CSV
+										</button>
+									</span>
+								</p>
 							</form>
 							<div class="container">
 								<div class="table-responsive">
@@ -155,6 +162,32 @@
 </html>
 
 <script type="text/javascript">
+	$("#download_csv").on("click", function (e) {
+		e.preventDefault();
+		var $form = $(this),
+			url = $form.attr("action");
+		const eventText = $("#event").val();
+		
+		const params = new URLSearchParams();
+		params.append("text", eventText);
+		params.append("format", "file");
+		fetch("/eventcsv?"+ params.toString())
+			.then(resp => resp.blob())
+			.then(blob => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.style.display = 'none';
+				a.href = url;
+				// the filename you want
+				a.download = 'event-'+new Date().getTime() + '.csv';
+				document.body.appendChild(a);
+				a.click();
+				window.URL.revokeObjectURL(url);
+				alert('your file has downloaded!'); // or you know, something with better UX...
+			})
+			.catch(() => alert('oh no!'));
+	});
+
 	$("#form").submit(function (event) {
 		event.preventDefault();
 		var $form = $(this),
