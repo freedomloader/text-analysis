@@ -451,7 +451,13 @@ function isResultEvent(result) {
       result.announced ||
       result.announcement ||
       result.court ||
-      result.delay
+      result.delay ||
+      result.custody ||
+      result.remedy ||
+      result.subscription ||
+      result.alert ||
+      result.matchday ||
+      result.services
     ) {
       return true;
     }
