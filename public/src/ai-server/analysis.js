@@ -39,7 +39,8 @@ async function getEventOnResult(text, result) {
     var time = text.match(/[0-9]{1,2}(?:(?::[0-9]{2})|(?: [0-9]{2}))\b/);
 
     new_result["Time"] =
-      (hour ? hour + ": at: " : "") + (time && isStr(time[0]) ? time[0].replace(/\s+/g, ":") : "");
+      (hour ? hour + ": at: " : "") +
+      (time && isStr(time[0]) ? time[0].replace(/\s+/g, ":") : "");
 
     let addressParser = parseAddress(text, result.addresss);
     if (!addressParser && result.curAddress) {
@@ -440,6 +441,10 @@ function isResultEvent(result) {
       result.meetings ||
       result.appointment ||
       result.appointments ||
+      result.ready ||
+      result.announce ||
+      result.announced ||
+      result.announcement ||
       result.court ||
       result.delay
     ) {
