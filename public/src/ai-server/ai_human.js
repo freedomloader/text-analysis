@@ -125,7 +125,7 @@ module.exports = class HunmaAI {
       result.topic.response;
     } catch (e) {
       result["topic"] = { response: await this.textToSplit(q) };
-      result["lemma"] = { lemma: await this.checkUnnesessaryText(q) };
+      result["lemma"] = { lemma: await this.checkUnnesessaryWords(q) };
 
       if (!result["curAddress"])
         result["curAddress"] = address ? await address.result : null;
@@ -151,7 +151,7 @@ module.exports = class HunmaAI {
     return result;
   }
 
-  async checkUnnesessaryText(text) {
+  async checkUnnesessaryWords(text) {
     // Convert to lowercase
     text = text.toLowerCase();
 
