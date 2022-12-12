@@ -17,7 +17,7 @@
     "axios": "^0.18.1",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "csv-parser": "^2.3.2",
     "csv-writer": "^1.6.0",
     "unirest": "^0.6.0",
